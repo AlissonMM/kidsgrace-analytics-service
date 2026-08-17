@@ -1,25 +1,43 @@
 package edu.meialua.service;
 
 import edu.meialua.dto.LogEvent;
+import edu.meialua.entity.AnalyticsMetric;
+import edu.meialua.repository.AnalyticsMetricRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 @ApplicationScoped
 public class AnalyticsService {
+    private final AnalyticsMetricRepository analyticsMetricRepository;
 
-    private final AtomicLong totalEvents = new AtomicLong();
+    @Inject
+    public AnalyticsService(AnalyticsMetricRepository analyticsMetricRepository) {
+        this.analyticsMetricRepository = analyticsMetricRepository;
+    }
 
-        public void process(LogEvent logEvent) {
+    @Transactional
+    public void process(LogEvent logEvent) {
 
-            totalEvents.incrementAndGet();
+        AnalyticsMetric metric = analyticsMetricRepository.findByEntityAndAction(
+                logEvent.getEntity(),
+                logEvent.getAction()
+        )
+                .orElseGet(() -> AnalyticsMetric.builder()
+                        .entity(logEvent.getEntity())
+                        .action(logEvent.getAction())
+                        .totalCount(0L)
+                        .build()
+                );
 
-            System.out.println("Processing analytics event: ");
-            System.out.println(logEvent);
-        }
+
+        metric.setTotalCount(metric.getTotalCount() + 1);
+        metric.setLastEventAt(logEvent.getTimestamp());
+
+        analyticsMetricRepository.persist(metric);
 
 
-        public long getTotalEvents() {
-            return totalEvents.get();
-        }
+    }
 }

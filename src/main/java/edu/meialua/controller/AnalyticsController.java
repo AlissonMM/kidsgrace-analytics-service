@@ -25,7 +25,7 @@ public class AnalyticsController {
     @Path("/events")
     public EventCountDTO getTotalEvents() {
         return new EventCountDTO(
-                analyticsService.getTotalEvents()
+                1
         );
     }
 }

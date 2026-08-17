@@ -1,6 +1,7 @@
 package edu.meialua.entity;
 
 
+import edu.meialua.enums.Action;
 import edu.meialua.enums.EntityType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,7 @@ public class AnalyticsMetric {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EntityAction action;
+    private Action action;
 
     @Column(nullable = false)
     private Long totalCount;
