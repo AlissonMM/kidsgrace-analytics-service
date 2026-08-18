@@ -23,4 +23,35 @@ public class AnalyticsMetricRepository implements PanacheRepository<AnalyticsMet
                 action
         ).firstResultOptional();
     }
+
+
+    public long getTotalEvents(){
+        return find(
+                "select coalesce(sum(totalCount), 0) from AnalyticsMetric"
+        )
+                .project(Long.class)
+                .firstResult();
+    }
+
+    public long getTotalByEntity(EntityType entity) {
+        return find(
+                "select coalesce(sum(totalCount), 0) " +
+                        "from AnalyticsMetric " +
+                        "where entity = ?1",
+                entity
+        )
+                .project(Long.class)
+                .firstResult();
+    }
+
+    public long getTotalByAction(Action action) {
+        return find(
+                "select coalesce(sum(totalCount), 0) " +
+                        "from AnalyticsMetric " +
+                        "where action = ?1",
+                action
+        )
+                .project(Long.class)
+                .firstResult();
+    }
 }

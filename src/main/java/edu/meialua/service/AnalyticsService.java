@@ -2,6 +2,8 @@ package edu.meialua.service;
 
 import edu.meialua.dto.LogEvent;
 import edu.meialua.entity.AnalyticsMetric;
+import edu.meialua.enums.Action;
+import edu.meialua.enums.EntityType;
 import edu.meialua.repository.AnalyticsMetricRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -39,5 +41,17 @@ public class AnalyticsService {
         analyticsMetricRepository.persist(metric);
 
 
+    }
+
+    public long getTotalCount(){
+        return analyticsMetricRepository.getTotalEvents();
+    }
+
+    public long getTotalByEntity(EntityType entity){
+        return analyticsMetricRepository.getTotalByEntity(entity);
+    }
+
+    public long getTotalByAction(Action action){
+        return analyticsMetricRepository.getTotalByAction(action);
     }
 }
