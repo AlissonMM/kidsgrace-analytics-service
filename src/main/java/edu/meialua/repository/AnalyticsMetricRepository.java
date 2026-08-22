@@ -6,6 +6,7 @@ import edu.meialua.enums.EntityType;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.util.List;
 import java.util.Optional;
 
 import static io.quarkus.hibernate.orm.panache.PanacheEntityBase.find;
@@ -53,5 +54,9 @@ public class AnalyticsMetricRepository implements PanacheRepository<AnalyticsMet
         )
                 .project(Long.class)
                 .firstResult();
+    }
+
+    public List<AnalyticsMetric> getTotalsByAction() {
+        return listAll();
     }
 }
