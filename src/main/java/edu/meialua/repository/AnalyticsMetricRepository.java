@@ -56,7 +56,16 @@ public class AnalyticsMetricRepository implements PanacheRepository<AnalyticsMet
                 .firstResult();
     }
 
-    public List<AnalyticsMetric> getTotalsByAction() {
-        return listAll();
+    /**
+     * Soma totalCount por action, agrupando no banco (GROUP BY) em vez de
+     * trazer todas as linhas e somar em Java.
+     */
+    public List<Object[]> sumTotalCountGroupByAction() {
+        return getEntityManager()
+                .createQuery(
+                        "select m.action, sum(m.totalCount) from AnalyticsMetric m group by m.action",
+                        Object[].class
+                )
+                .getResultList();
     }
 }
