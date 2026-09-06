@@ -8,19 +8,19 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 @ApplicationScoped
-public class ToyAnalyticsConsumer {
+public class ProductAnalyticsConsumer {
 
     private final AnalyticsService analyticsService;
 
     @Inject
-    public ToyAnalyticsConsumer(AnalyticsService analyticsService) {
+    public ProductAnalyticsConsumer(AnalyticsService analyticsService) {
         this.analyticsService = analyticsService;
     }
 
-    @Incoming("toy-analytics")
+    @Incoming("product-analytics")
     @Blocking
-    public void consume(LogEvent toyLogEvent) {
-        analyticsService.process(toyLogEvent);
+    public void consume(LogEvent productLogEvent) {
+        analyticsService.process(productLogEvent);
 
     }
 }

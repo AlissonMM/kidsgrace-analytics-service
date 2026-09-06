@@ -28,7 +28,7 @@ public class LogEvent {
     private LocalDateTime timestamp;
 
     // Espelham os campos opcionais que a API principal passou a enviar em
-    // Action.SALE (edu.meialua.kidsgrace.model.LogEvent) — ficam null em
+    // Action.SALE (edu.meialua.morkstore.model.LogEvent) — ficam null em
     // todos os outros eventos.
     private String category;
 
