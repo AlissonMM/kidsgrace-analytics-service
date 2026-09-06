@@ -32,12 +32,16 @@ public class AnalyticsMetric {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // columnDefinition = VARCHAR força o Hibernate a não usar um ENUM nativo
+    // do MySQL aqui: um enum nativo trava com "Data truncated for column"
+    // toda vez que um valor novo é adicionado ao Action/EntityType do Java
+    // sem regenerar a coluna manualmente.
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private EntityType entity;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private Action action;
 
     @Column(nullable = false)
