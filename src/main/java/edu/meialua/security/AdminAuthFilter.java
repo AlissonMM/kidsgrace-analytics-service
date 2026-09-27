@@ -13,6 +13,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -29,9 +30,12 @@ import java.util.List;
 @Priority(Priorities.AUTHENTICATION)
 public class AdminAuthFilter implements ContainerRequestFilter {
 
-    private static final SecretKey SIGNING_KEY = Keys.hmacShaKeyFor(
-            JwtSecurityConstants.JWT_SECRET.getBytes(StandardCharsets.UTF_8)
-    );
+    private final SecretKey signingKey;
+
+    // Mesmo app.jwt.secret da morkstore-api: este serviço só valida tokens.
+    public AdminAuthFilter(@ConfigProperty(name = "app.jwt.secret") String secret) {
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     @Override
     public void filter(ContainerRequestContext requestContext) {
@@ -55,7 +59,7 @@ public class AdminAuthFilter implements ContainerRequestFilter {
 
         try {
             Claims claims = Jwts.parser()
-                    .verifyWith(SIGNING_KEY)
+                    .verifyWith(signingKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
